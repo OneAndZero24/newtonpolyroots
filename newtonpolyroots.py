@@ -39,8 +39,8 @@ def polyderiv(p: Polynomial) -> Polynomial:
 
     oldcoefs = p.coefs
     if len(oldcoefs) > 1:
-        newcoefs = oldcoefs[1:]
-        for i in range(1, len(oldcoefs), 1):
+        newcoefs = oldcoefs[1:]                 # Shift coefficients
+        for i in range(1, len(oldcoefs), 1):    # Multiply by powers
             newcoefs[i-1] *= i
         return Polynomial(newcoefs)
     else:
@@ -58,6 +58,7 @@ def newton(p: Polynomial, x: complex, E: float, I: int, d: Polynomial=None) -> L
     steps = []
 
     def _step(y: complex) -> Tuple[complex, complex]:
+        # Util to append steps
         val = p(y)
         r = (y, val)
         steps.append(r)
@@ -66,7 +67,7 @@ def newton(p: Polynomial, x: complex, E: float, I: int, d: Polynomial=None) -> L
     i = 0
     c_x, c_val = _step(x)
     while abs(c_val) > E and i < I:
-        new_x = c_x-(c_val/d(c_x))
+        new_x = c_x-(c_val/d(c_x))  # Newton's method step
         c_x, c_val = _step(new_x)
         i += 1
 
@@ -79,13 +80,16 @@ def roots(p: Polynomial, domain: Tuple[complex, complex], E: float, G: float, I:
     """
 
     start, stop = domain
+
+    # Grid for sampling starting points
     realX = np.linspace(start.real, stop.real, R)
     imagX = np.linspace(start.real, stop.real, R)
 
     roots = []
-    Y = np.ndarray(shape=(R, R))
+    Y = np.ndarray(shape=(R, R))    # For roots markers - to color appropriate basins
 
     def _addroot(root: complex) -> int:
+        # Checks if new root detected, returns its index
         for i, r in enumerate(roots):
             if abs(r-root) < G:
                 return i
@@ -95,6 +99,7 @@ def roots(p: Polynomial, domain: Tuple[complex, complex], E: float, G: float, I:
 
     dp = polyderiv(p)
 
+    # Starting newtons method at each grid point
     with Bar('Calculating', max=R*R) as bar:
         for i, x in enumerate(realX):
             for j, y in enumerate(imagX):
