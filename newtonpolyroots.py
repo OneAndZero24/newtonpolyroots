@@ -95,7 +95,7 @@ def roots(p: Polynomial, domain: Tuple[complex, complex], E: float, G: float, I:
                 return i
         r = len(roots)
         roots.append(root)
-        return r
+        return r+1
 
     dp = polyderiv(p)
 

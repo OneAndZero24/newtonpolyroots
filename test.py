@@ -30,9 +30,8 @@ def main():
     steps = newton(p, 1.0+1.0j, EPSILON, LIMIT)
     print(steps)
 
-    #realsteps = [(x.real, y.real) for x, y in steps]
-    #stepsplot2d((-1.0, 1.0), p, realsteps) 
-    # can be confusing as this plots a projection from side to real space
+    realsteps = [(x.real, y.real) for x, y in steps]
+    stepsplot2d((-1.0, 1.0), p, realsteps)  # can be confusing as this plots a projection from side to real space
 
     stepsplot3d((-2.0-2.0j,2.0+2.0j), p, steps)
 
