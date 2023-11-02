@@ -41,6 +41,8 @@ def rootsplot(domain: Tuple[complex, complex], roots: List[complex], Y: List[Lis
     rreal = [((x.real-start.real)/(stop.real-start.real))*R for x in roots]
     rimag = [((x.imag+stop.real)/(stop.imag-start.imag))*R for x in roots]
     plt.axis('off')
-    plt.imshow(Y, cmap='hsv', origin='lower')
+    cmap = plt.get_cmap('hsv')
+    cmap.set_under('white')
+    plt.imshow(Y, cmap=cmap, vmin=1, origin='lower')
     plt.scatter(rreal, rimag, s=12, color='black', marker='x')
     plt.show()

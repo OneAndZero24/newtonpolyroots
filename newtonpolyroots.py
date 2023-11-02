@@ -15,11 +15,16 @@ class Polynomial():
     def __init__(self, coefs: List[float]):
         if not len(coefs):
             raise Exception("Polynomial coefficients cannot be empty!")
-        self.coefs = coefs
+        alpha = 1
         j = 0
         for i, e in enumerate(coefs):
             if e != 0.0:
                 j = i
+                if abs(e) < alpha:
+                    alpha = e
+
+        coefs = [x/alpha if abs(x) > 0 else 0 for x in coefs]
+
         self.coefs = coefs[:(j+1)]
         self.deg = len(self.coefs)-1
 
@@ -53,7 +58,7 @@ def polyderiv(p: Polynomial) -> Polynomial:
         return 0.0
     
 
-def newton(p: Polynomial, x: complex, E: float, G: float, I: int, d: Polynomial=None) -> List[Tuple[complex, complex]]:
+def newton(p: Polynomial, x: complex, G: float, I: int, d: Polynomial=None) -> List[Tuple[complex, complex]]:
     """
     Performs newton method descent until given epsilon `E` is achieved or iteration number reached\n
     Returns list of steps `[(step_x, step_y)]` - last one is result
@@ -73,7 +78,7 @@ def newton(p: Polynomial, x: complex, E: float, G: float, I: int, d: Polynomial=
     i = 0
     c_x, c_val = _step(x)
     old_x = c_x+2*G
-    while (abs(c_val) > E or abs(old_x-c_x) > G) and i < I:
+    while (abs(old_x-c_x) > G) and i < I:
         old_x = c_x
         new_x = c_x-(c_val/d(c_x))  # Newton's method step
         c_x, c_val = _step(new_x)
@@ -100,10 +105,9 @@ def roots(p: Polynomial, domain: Tuple[complex, complex], E: float, G: float, I:
         # Checks if new root detected, returns its index
         for i, r in enumerate(roots):
             if abs(r-root) < G:
-                return i
-        r = len(roots)
+                return i+1
         roots.append(root)
-        return r+1
+        return len(roots)+1
 
     dp = polyderiv(p)
 
@@ -111,8 +115,11 @@ def roots(p: Polynomial, domain: Tuple[complex, complex], E: float, G: float, I:
     with Bar('Calculating', max=R*R) as bar:
         for i, x in enumerate(realX):
             for j, y in enumerate(imagX):
-                croot = newton(p, complex(x, y), E, G, I, dp)[-1][0]
-                key = _addroot(croot)
+                step = newton(p, complex(x, y), G, I, dp)[-1]
+                croot, cval = step
+                key = 0
+                if abs(cval) < E:
+                    key = _addroot(croot)
                 Y[i][j] = key
                 bar.next()
     

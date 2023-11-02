@@ -7,9 +7,9 @@ from plots import *
 
 warnings.filterwarnings("ignore")
                         
-EPSILON = 10e-14
+EPSILON = 10e-9
 GAMMA = 10e-9
-LIMIT = 10e3
+LIMIT = 10000
 RESOLUTION = 1000
 
 
