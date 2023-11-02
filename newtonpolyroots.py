@@ -16,6 +16,12 @@ class Polynomial():
         if not len(coefs):
             raise Exception("Polynomial coefficients cannot be empty!")
         self.coefs = coefs
+        j = 0
+        for i, e in enumerate(coefs):
+            if e != 0.0:
+                j = i
+        self.coefs = coefs[:(j+1)]
+        self.deg = len(self.coefs)-1
 
     def __str__(self) -> str:
         r = str(self.coefs[0])
