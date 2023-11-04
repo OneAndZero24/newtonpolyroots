@@ -24,9 +24,15 @@ def main():
     print("Recieved polynomial:")
     print(p)
 
-    r, Y = roots(p, (-2.0-2.0j,2.0+2.0j), EPSILON, GAMMA, LIMIT, RESOLUTION)
+    # Cauchy bound
+    C = p.coefs[-1]
+    R = 1+max([abs(x/C) for x in p.coefs[:-1]])
+
+    domain = (complex(-R, -R), complex(R, R))
+
+    r, Y = roots(p, domain, EPSILON, GAMMA, LIMIT, RESOLUTION)
     print(r)
-    rootsplot((-2.0-2.0j,2.0+2.0j), r, Y, RESOLUTION)
+    rootsplot(domain, r, Y, RESOLUTION)
 
 if __name__ == "__main__":
     main()
