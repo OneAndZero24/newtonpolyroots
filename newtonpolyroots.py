@@ -78,7 +78,7 @@ def newton(p: Polynomial, x: complex, G: float, I: int, d: Polynomial=None) -> L
     i = 0
     c_x, c_val = _step(x)
     old_x = c_x+2*G
-    while (abs(old_x-c_x) > G) and i < I:
+    while (c_val > E) and (abs(old_x-c_x) > G) and i < I:
         old_x = c_x
         new_x = c_x-(c_val/d(c_x))  # Newton's method step
         c_x, c_val = _step(new_x)
