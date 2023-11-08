@@ -58,7 +58,7 @@ def polyderiv(p: Polynomial) -> Polynomial:
         return 0.0
     
 
-def newton(p: Polynomial, x: complex, G: float, I: int, d: Polynomial=None) -> List[Tuple[complex, complex]]:
+def newton(p: Polynomial, x: complex, E: float, G: float, I: int, d: Polynomial=None) -> List[Tuple[complex, complex]]:
     """
     Performs newton method descent until given epsilon `E` is achieved or iteration number reached\n
     Returns list of steps `[(step_x, step_y)]` - last one is result
@@ -78,7 +78,7 @@ def newton(p: Polynomial, x: complex, G: float, I: int, d: Polynomial=None) -> L
     i = 0
     c_x, c_val = _step(x)
     old_x = c_x+2*G
-    while (c_val > E) and (abs(old_x-c_x) > G) and i < I:
+    while (abs(c_val) > E) and (abs(old_x-c_x) > G) and i < I:
         old_x = c_x
         new_x = c_x-(c_val/d(c_x))  # Newton's method step
         c_x, c_val = _step(new_x)
@@ -115,7 +115,7 @@ def roots(p: Polynomial, domain: Tuple[complex, complex], E: float, G: float, I:
     with Bar('Calculating', max=R*R) as bar:
         for i, x in enumerate(realX):
             for j, y in enumerate(imagX):
-                step = newton(p, complex(x, y), G, I, dp)[-1]
+                step = newton(p, complex(x, y), E, G, I, dp)[-1]
                 croot, cval = step
                 key = 0
                 if abs(cval) < E:
